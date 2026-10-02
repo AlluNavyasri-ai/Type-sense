@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
     <title>TypeSense - Typing Speed Test</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -10,8 +10,26 @@
     <h1>TypeSense</h1>
     <p>Test and improve your typing speed</p>
 
-    <button>Start Test</button>
-<script src="script.js"></script>
+    <div id="testArea">
+
+        <p id="paragraph">
+            The quick brown fox jumps over the lazy dog.
+        </p>
+
+        <textarea id="typingBox"
+            placeholder="Start typing here..."></textarea>
+
+        <div class="stats">
+            <span>Time: <b id="timer">30</b>s</span>
+            <span>WPM: <b id="wpm">0</b></span>
+            <span>Accuracy: <b id="accuracy">100</b>%</span>
+        </div>
+
+        <button id="startButton">Start Test</button>
+
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
