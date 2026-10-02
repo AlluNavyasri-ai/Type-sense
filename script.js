@@ -1,106 +1,58 @@
-const text = "The quick brown fox jumps over the lazy dog.";
+const typingBox = document.getElementById("typingBox");
+const startButton = document.getElementById("startButton");
 
-const textarea = document.querySelector("textarea");
-const startButton = document.querySelector("button");
+const timer = document.getElementById("timer");
+const wpm = document.getElementById("wpm");
+const accuracy = document.getElementById("accuracy");
 
-let startTime;
-let timer;
-let running = false;
+const text = document.getElementById("paragraph").textContent.trim();
 
-textarea.disabled = true;
+let seconds = 30;
+let interval;
+let started = false;
 
-startButton.addEventListener("click", function () {
+typingBox.disabled = true;
 
-    if (!running) {
-        textarea.value = "";
-        textarea.disabled = false;
-        textarea.focus();
+startButton.onclick = function () {
 
-        startTime = Date.now();
-        running = true;
+    clearInterval(interval);
 
-        startButton.textContent = "Test Running...";
+    seconds = 30;
+    timer.textContent = seconds;
+    wpm.textContent = 0;
+    accuracy.textContent = 100;
 
-        timer = setInterval(updateTest, 1000);
-    } else {
-        finishTest();
-    }
-});
+    typingBox.value = "";
+    typingBox.disabled = false;
+    typingBox.focus();
 
-textarea.addEventListener("input", function () {
+    started = true;
+    startButton.disabled = true;
 
-    if (!running) return;
+    interval = setInterval(function () {
 
-    updateTest();
+        seconds--;
+        timer.textContent = seconds;
 
-    // Stop automatically when the complete sentence is typed
-    if (textarea.value === text) {
-        finishTest();
-    }
-});
-
-function updateTest() {
-
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-
-    const typed = textarea.value;
-
-    const words = typed.trim() === ""
-        ? 0
-        : typed.trim().split(/\s+/).length;
-
-    const wpm = elapsed > 0
-        ? Math.round((words / elapsed) * 60)
-        : 0;
-
-    let correct = 0;
-
-    for (let i = 0; i < typed.length; i++) {
-        if (typed[i] === text[i]) {
-            correct++;
+        if (seconds <= 0) {
+            finishTest();
         }
-    }
 
-    const accuracy = typed.length > 0
-        ? Math.round((correct / typed.length) * 100)
-        : 100;
+    }, 1000);
+};
 
-    document.title = `TypeSense - ${wpm} WPM`;
 
-    const stats = document.querySelector("#stats");
+typingBox.oninput = function () {
 
-    if (stats) {
-        stats.textContent =
-            `Time: ${elapsed}s | WPM: ${wpm} | Accuracy: ${accuracy}%`;
-    }
-}
+    if (!started) return;
 
-function finishTest() {
-
-    if (!running) return;
-
-    clearInterval(timer);
-    running = false;
-
-    textarea.disabled = true;
-
-    const elapsed = Math.max(
-        1,
-        Math.floor((Date.now() - startTime) / 1000)
-    );
-
-    const typed = textarea.value;
-
-    const words = typed.trim() === ""
-        ? 0
-        : typed.trim().split(/\s+/).length;
-
-    const wpm = Math.round((words / elapsed) * 60);
+    const typed = typingBox.value;
 
     let correct = 0;
     let errors = 0;
 
     for (let i = 0; i < typed.length; i++) {
+
         if (typed[i] === text[i]) {
             correct++;
         } else {
@@ -108,16 +60,38 @@ function finishTest() {
         }
     }
 
-    const accuracy = typed.length > 0
-        ? Math.round((correct / typed.length) * 100)
-        : 0;
-
-    const stats = document.querySelector("#stats");
-
-    if (stats) {
-        stats.textContent =
-            `Completed! Time: ${elapsed}s | WPM: ${wpm} | Accuracy: ${accuracy}% | Errors: ${errors}`;
+    if (typed.length > 0) {
+        accuracy.textContent =
+            Math.round((correct / typed.length) * 100);
     }
 
+    const timeUsed = 30 - seconds;
+
+    if (timeUsed > 0) {
+        wpm.textContent =
+            Math.round((correct / 5) / (timeUsed / 60));
+    }
+
+    // Finished typing the complete paragraph
+    if (typed === text) {
+        finishTest();
+    }
+};
+
+
+function finishTest() {
+
+    clearInterval(interval);
+
+    started = false;
+    typingBox.disabled = true;
+    startButton.disabled = false;
+
     startButton.textContent = "Try Again";
+
+    alert(
+        "Test Complete!\\n\\n" +
+        "WPM: " + wpm.textContent + "\\n" +
+        "Accuracy: " + accuracy.textContent + "%"
+    );
 }
