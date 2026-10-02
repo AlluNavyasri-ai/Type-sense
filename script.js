@@ -1,143 +1,123 @@
-const startButton = document.getElementById("startButton");
-const typingBox = document.getElementById("typingBox");
-const paragraph = document.getElementById("paragraph");
+const text = "The quick brown fox jumps over the lazy dog.";
 
-const timerDisplay = document.getElementById("timer");
-const wpmDisplay = document.getElementById("wpm");
-const accuracyDisplay = document.getElementById("accuracy");
+const textarea = document.querySelector("textarea");
+const startButton = document.querySelector("button");
 
-let timeLeft = 30;
-let timer;
-let testStarted = false;
 let startTime;
-let errors = 0;
+let timer;
+let running = false;
+
+textarea.disabled = true;
 
 startButton.addEventListener("click", function () {
 
-    clearInterval(timer);
+    if (!running) {
+        textarea.value = "";
+        textarea.disabled = false;
+        textarea.focus();
 
-    timeLeft = 30;
-    errors = 0;
-    testStarted = true;
+        startTime = Date.now();
+        running = true;
 
-    timerDisplay.textContent = timeLeft;
-    wpmDisplay.textContent = 0;
-    accuracyDisplay.textContent = 100;
+        startButton.textContent = "Test Running...";
 
-    typingBox.value = "";
-    typingBox.disabled = false;
-    typingBox.focus();
-
-    startButton.disabled = true;
-
-    startTime = Date.now();
-
-    timer = setInterval(function () {
-
-        timeLeft--;
-
-        timerDisplay.textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-            finishTest();
-        }
-
-    }, 1000);
-});
-
-
-typingBox.addEventListener("input", function () {
-
-    if (!testStarted) return;
-
-    const typedText = typingBox.value;
-    const originalText = paragraph.textContent.trim();
-
-    errors = 0;
-    let correctCharacters = 0;
-
-    for (let i = 0; i < typedText.length; i++) {
-
-        if (typedText[i] === originalText[i]) {
-            correctCharacters++;
-        } else {
-            errors++;
-        }
-    }
-
-    const accuracy = typedText.length === 0
-        ? 100
-        : Math.round((correctCharacters / typedText.length) * 100);
-
-    accuracyDisplay.textContent = accuracy;
-
-    const elapsedSeconds = (Date.now() - startTime) / 1000;
-    const minutes = elapsedSeconds / 60;
-
-    const wpm = minutes > 0
-        ? Math.round((correctCharacters / 5) / minutes)
-        : 0;
-
-    wpmDisplay.textContent = wpm;
-
-    // Finish when the complete paragraph is typed
-    if (typedText.length >= originalText.length) {
+        timer = setInterval(updateTest, 1000);
+    } else {
         finishTest();
     }
 });
 
+textarea.addEventListener("input", function () {
+
+    if (!running) return;
+
+    updateTest();
+
+    // Stop automatically when the complete sentence is typed
+    if (textarea.value === text) {
+        finishTest();
+    }
+});
+
+function updateTest() {
+
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+
+    const typed = textarea.value;
+
+    const words = typed.trim() === ""
+        ? 0
+        : typed.trim().split(/\s+/).length;
+
+    const wpm = elapsed > 0
+        ? Math.round((words / elapsed) * 60)
+        : 0;
+
+    let correct = 0;
+
+    for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === text[i]) {
+            correct++;
+        }
+    }
+
+    const accuracy = typed.length > 0
+        ? Math.round((correct / typed.length) * 100)
+        : 100;
+
+    document.title = `TypeSense - ${wpm} WPM`;
+
+    const stats = document.querySelector("#stats");
+
+    if (stats) {
+        stats.textContent =
+            `Time: ${elapsed}s | WPM: ${wpm} | Accuracy: ${accuracy}%`;
+    }
+}
 
 function finishTest() {
 
-    if (!testStarted) return;
-
-    testStarted = false;
+    if (!running) return;
 
     clearInterval(timer);
+    running = false;
 
-    typingBox.disabled = true;
-    startButton.disabled = false;
-    startButton.textContent = "Try Again";
+    textarea.disabled = true;
 
-    const typedText = typingBox.value;
-    const originalText = paragraph.textContent.trim();
+    const elapsed = Math.max(
+        1,
+        Math.floor((Date.now() - startTime) / 1000)
+    );
 
-    let correctCharacters = 0;
-    errors = 0;
+    const typed = textarea.value;
 
-    for (let i = 0; i < typedText.length; i++) {
+    const words = typed.trim() === ""
+        ? 0
+        : typed.trim().split(/\s+/).length;
 
-        if (typedText[i] === originalText[i]) {
-            correctCharacters++;
+    const wpm = Math.round((words / elapsed) * 60);
+
+    let correct = 0;
+    let errors = 0;
+
+    for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === text[i]) {
+            correct++;
         } else {
             errors++;
         }
     }
 
-    const elapsedSeconds = Math.max(
-        (Date.now() - startTime) / 1000,
-        1
-    );
+    const accuracy = typed.length > 0
+        ? Math.round((correct / typed.length) * 100)
+        : 0;
 
-    const minutes = elapsedSeconds / 60;
+    const stats = document.querySelector("#stats");
 
-    const wpm = Math.round(
-        (correctCharacters / 5) / minutes
-    );
+    if (stats) {
+        stats.textContent =
+            `Completed! Time: ${elapsed}s | WPM: ${wpm} | Accuracy: ${accuracy}% | Errors: ${errors}`;
+    }
 
-    const accuracy = typedText.length === 0
-        ? 0
-        : Math.round(
-            (correctCharacters / typedText.length) * 100
-        );
-
-    wpmDisplay.textContent = wpm;
-    accuracyDisplay.textContent = accuracy;
-
-    alert(
-        "Test Complete!\n\n" +
-        "WPM: " + wpm + "\n" +
-        "Accuracy: " + accuracy + "%\n" +
-        "Errors: " + errors
-    );
+    startButton.textContent = "Try Again";
 }
