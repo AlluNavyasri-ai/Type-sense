@@ -1,50 +1,61 @@
-const typingBox = document.getElementById("typingBox");
 const startButton = document.getElementById("startButton");
+const typingBox = document.getElementById("typingBox");
 
-const timer = document.getElementById("timer");
-const wpm = document.getElementById("wpm");
-const accuracy = document.getElementById("accuracy");
+const paragraph = document.getElementById("paragraph");
+const timerDisplay = document.getElementById("timer");
+const wpmDisplay = document.getElementById("wpm");
+const accuracyDisplay = document.getElementById("accuracy");
 
-const text = document.getElementById("paragraph").textContent.trim();
+const text = paragraph.textContent.trim();
 
-let seconds = 30;
-let interval;
-let started = false;
+let timeLeft = 30;
+let timer;
+let running = false;
+let startTime = 0;
+
 
 typingBox.disabled = true;
 
-startButton.onclick = function () {
 
-    clearInterval(interval);
+startButton.addEventListener("click", function () {
 
-    seconds = 30;
-    timer.textContent = seconds;
-    wpm.textContent = 0;
-    accuracy.textContent = 100;
+    clearInterval(timer);
+
+    timeLeft = 30;
+    running = true;
+    startTime = Date.now();
+
+    timerDisplay.textContent = "30";
+    wpmDisplay.textContent = "0";
+    accuracyDisplay.textContent = "100";
 
     typingBox.value = "";
     typingBox.disabled = false;
+
+    startButton.disabled = true;
+    startButton.textContent = "Typing...";
+
     typingBox.focus();
 
-    started = true;
-    startButton.disabled = true;
+    timer = setInterval(function () {
 
-    interval = setInterval(function () {
+        timeLeft--;
 
-        seconds--;
-        timer.textContent = seconds;
+        timerDisplay.textContent = timeLeft;
 
-        if (seconds <= 0) {
+        if (timeLeft <= 0) {
             finishTest();
         }
 
     }, 1000);
-};
+});
 
 
-typingBox.oninput = function () {
+typingBox.addEventListener("input", function () {
 
-    if (!started) return;
+    if (!running) {
+        return;
+    }
 
     const typed = typingBox.value;
 
@@ -60,38 +71,84 @@ typingBox.oninput = function () {
         }
     }
 
+
     if (typed.length > 0) {
-        accuracy.textContent =
+
+        const accuracy =
             Math.round((correct / typed.length) * 100);
+
+        accuracyDisplay.textContent = accuracy;
     }
 
-    const timeUsed = 30 - seconds;
 
-    if (timeUsed > 0) {
-        wpm.textContent =
-            Math.round((correct / 5) / (timeUsed / 60));
+    const elapsedSeconds =
+        (Date.now() - startTime) / 1000;
+
+    if (elapsedSeconds > 0) {
+
+        const wpm =
+            Math.round((correct / 5) / (elapsedSeconds / 60));
+
+        wpmDisplay.textContent = wpm;
     }
 
-    // Finished typing the complete paragraph
-    if (typed === text) {
+
+    // Finish as soon as the complete paragraph is entered
+    if (typed.length >= text.length) {
         finishTest();
     }
-};
+});
 
 
 function finishTest() {
 
-    clearInterval(interval);
+    if (!running) {
+        return;
+    }
 
-    started = false;
+    running = false;
+
+    clearInterval(timer);
+
     typingBox.disabled = true;
     startButton.disabled = false;
-
     startButton.textContent = "Try Again";
 
+    const typed = typingBox.value;
+
+    let correct = 0;
+    let errors = 0;
+
+    for (let i = 0; i < typed.length; i++) {
+
+        if (typed[i] === text[i]) {
+            correct++;
+        } else {
+            errors++;
+        }
+    }
+
+
+    const elapsedSeconds =
+        Math.max(1, (Date.now() - startTime) / 1000);
+
+    const wpm =
+        Math.round((correct / 5) / (elapsedSeconds / 60));
+
+    const accuracy =
+        typed.length > 0
+        ? Math.round((correct / typed.length) * 100)
+        : 0;
+
+
+    wpmDisplay.textContent = wpm;
+    accuracyDisplay.textContent = accuracy;
+
+
     alert(
-        "Test Complete!\\n\\n" +
-        "WPM: " + wpm.textContent + "\\n" +
-        "Accuracy: " + accuracy.textContent + "%"
+        "TEST COMPLETE!\n\n" +
+        "WPM: " + wpm + "\n" +
+        "Accuracy: " + accuracy + "%\n" +
+        "Errors: " + errors
     );
 }
