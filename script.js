@@ -98,8 +98,6 @@ typingBox.addEventListener("input", function () {
         finishTest();
     }
 });
-
-
 function finishTest() {
 
     if (!running) {
@@ -107,7 +105,6 @@ function finishTest() {
     }
 
     running = false;
-
     clearInterval(timer);
 
     typingBox.disabled = true;
@@ -128,27 +125,25 @@ function finishTest() {
         }
     }
 
-
     const elapsedSeconds =
         Math.max(1, (Date.now() - startTime) / 1000);
 
-    const wpm =
+    const finalWpm =
         Math.round((correct / 5) / (elapsedSeconds / 60));
 
-    const accuracy =
+    const finalAccuracy =
         typed.length > 0
         ? Math.round((correct / typed.length) * 100)
         : 0;
 
+    wpmDisplay.textContent = finalWpm;
+    accuracyDisplay.textContent = finalAccuracy;
 
-    wpmDisplay.textContent = wpm;
-    accuracyDisplay.textContent = accuracy;
+    document.getElementById("finalWpm").textContent = finalWpm;
+    document.getElementById("finalAccuracy").textContent =
+        finalAccuracy + "%";
+    document.getElementById("finalErrors").textContent = errors;
 
-
-    alert(
-        "TEST COMPLETE!\n\n" +
-        "WPM: " + wpm + "\n" +
-        "Accuracy: " + accuracy + "%\n" +
-        "Errors: " + errors
-    );
+    document.getElementById("resultBox").style.display = "block";
 }
+
