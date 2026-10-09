@@ -6,7 +6,29 @@ const timerDisplay = document.getElementById("timer");
 const wpmDisplay = document.getElementById("wpm");
 const accuracyDisplay = document.getElementById("accuracy");
 
-const text = paragraph.textContent.trim();
+const levelSelect = document.getElementById("levelSelect");
+
+const sentences = {
+    beginner: [
+        "I like to play.",
+        "The sun is hot.",
+        "I love my family."
+    ],
+    intermediate: [
+        "Practice every day to improve your typing speed.",
+        "Learning new skills helps us grow.",
+        "Typing carefully can improve your accuracy."
+    ],
+    advanced: [
+        "Technology is changing the world faster than ever before.",
+        "Programming develops logical thinking and problem-solving skills.",
+        "Consistent practice improves both typing speed and accuracy."
+    ]
+};
+
+let text = paragraph.textContent.trim();
+
+
 
 let timeLeft = 30;
 let timer;
