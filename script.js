@@ -42,7 +42,8 @@ typingBox.disabled = true;
 startButton.addEventListener("click", function () {
 
     clearInterval(timer);
-
+const selectedLevel = levelSelect.value;
+const sentenceList = sentences[selectedLevel];
     timeLeft = 30;
     running = true;
     startTime = Date.now();
@@ -50,7 +51,11 @@ startButton.addEventListener("click", function () {
     timerDisplay.textContent = "30";
     wpmDisplay.textContent = "0";
     accuracyDisplay.textContent = "100";
+text = sentenceList[
+    Math.floor(Math.random() * sentenceList.length)
+];
 
+paragraph.textContent = text;
     typingBox.value = "";
     typingBox.disabled = false;
 
