@@ -57,6 +57,7 @@ text = sentenceList[
 
 paragraph.textContent = text;
     typingBox.value = "";
+    document.getElementById("resultBox").style.display = "none";
     typingBox.disabled = false;
 
     startButton.disabled = true;
