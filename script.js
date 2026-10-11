@@ -8,23 +8,81 @@ const accuracyDisplay = document.getElementById("accuracy");
 
 const levelSelect = document.getElementById("levelSelect");
 
+
 const sentences = {
     beginner: [
         "I like to play.",
         "The sun is hot.",
-        "I love my family."
+        "I love my family.",
+        "The cat is sleeping.",
+        "Birds can fly high.",
+        "I eat fresh fruit.",
+        "We go to school.",
+        "My bag is blue.",
+        "The dog runs fast.",
+        "Today is a good day.",
+        "I enjoy reading books.",
+        "The sky is very blue.",
+        "My friend is kind.",
+        "I drink a glass of water.",
+        "We play in the park.",
+        "The baby is smiling.",
+        "I write with a pen.",
+        "The flowers look beautiful.",
+        "I wake up early.",
+        "Practice makes us better."
     ],
+
     intermediate: [
         "Practice every day to improve your typing speed.",
         "Learning new skills helps us grow.",
-        "Typing carefully can improve your accuracy."
+        "Typing carefully can improve your accuracy.",
+        "Reading books expands our knowledge.",
+        "Good habits help us achieve our goals.",
+        "Technology makes communication faster and easier.",
+        "Students should manage their time wisely.",
+        "Regular practice builds confidence and skill.",
+        "The internet provides access to useful information.",
+        "Healthy routines improve our daily productivity.",
+        "Careful planning can save time and effort.",
+        "Creative thinking helps solve difficult problems.",
+        "Teamwork makes challenging tasks easier.",
+        "Learning from mistakes helps us improve.",
+        "Always check your work before submitting it.",
+        "Small steps can lead to great achievements.",
+        "Clear communication prevents many misunderstandings.",
+        "A positive attitude supports continuous learning.",
+        "Writing regularly improves both speed and clarity.",
+        "Patience and effort produce better results."
     ],
+
     advanced: [
         "Technology is changing the world faster than ever before.",
         "Programming develops logical thinking and problem-solving skills.",
-        "Consistent practice improves both typing speed and accuracy."
+        "Consistent practice improves both typing speed and accuracy.",
+        "Artificial intelligence can support people in many different fields.",
+        "Successful projects require planning, teamwork, and careful execution.",
+        "Digital communication connects people across different countries.",
+        "Creative solutions often emerge from careful observation and experimentation.",
+        "Cybersecurity protects important information from unauthorized access.",
+        "Developers must test their applications before releasing them.",
+        "Reliable software should be efficient, secure, and easy to use.",
+        "Continuous learning helps professionals adapt to technological changes.",
+        "Accurate data analysis supports better decisions and future planning.",
+        "Innovation becomes valuable when it solves real-world problems.",
+        "Good documentation makes complex systems easier to understand.",
+        "Responsible technology should respect privacy and accessibility.",
+        "Efficient algorithms can reduce processing time and resource usage.",
+        "Strong communication skills are essential for successful collaboration.",
+        "Careful debugging helps identify and correct programming errors.",
+        "Complex challenges often require patience and systematic reasoning.",
+        "A well-designed application should provide a consistent user experience."
     ]
 };
+
+    
+        
+
 
 let text = paragraph.textContent.trim();
 
