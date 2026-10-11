@@ -114,7 +114,20 @@ const sentenceList = sentences[selectedLevel];
     wpmDisplay.textContent = "0";
     accuracyDisplay.textContent = "100";
 text = sentenceList[
-    Math.floor(Math.random() * sentenceList.length)
+    let unusedSentences = sentenceList.filter(
+    sentence => !usedSentences[selectedLevel].includes(sentence)
+);
+
+if (unusedSentences.length === 0) {
+    usedSentences[selectedLevel] = [];
+    unusedSentences = [...sentenceList];
+}
+
+text = unusedSentences[
+    Math.floor(Math.random() * unusedSentences.length)
+];
+
+usedSentences[selectedLevel].push(text);
 ];
 
 paragraph.textContent = text;
