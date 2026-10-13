@@ -16,7 +16,7 @@ let usedSentences = {
 
 const sentences = {
 
-    
+    beginner:[
     
         "I like to play.",
         "The sun is hot.",
@@ -38,7 +38,7 @@ const sentences = {
         "The flowers look beautiful.",
         "I wake up early.",
         "Practice makes us better."
-    ],
+    ];
 
     intermediate: [
         "Practice every day to improve your typing speed.",
@@ -61,7 +61,7 @@ const sentences = {
         "A positive attitude supports continuous learning.",
         "Writing regularly improves both speed and clarity.",
         "Patience and effort produce better results."
-    ],
+    ];
 
     advanced: [
         "Technology is changing the world faster than ever before.",
@@ -84,7 +84,7 @@ const sentences = {
         "Careful debugging helps identify and correct programming errors.",
         "Complex challenges often require patience and systematic reasoning.",
         "A well-designed application should provide a consistent user experience."
-    ]
+    ];
 };
 
     
