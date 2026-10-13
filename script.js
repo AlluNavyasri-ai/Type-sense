@@ -8,13 +8,16 @@ const accuracyDisplay = document.getElementById("accuracy");
 
 const levelSelect = document.getElementById("levelSelect");
 
-
-const sentences = {let usedSentences = {
+let usedSentences = {
     beginner: [],
     intermediate: [],
     advanced: []
 };
-    beginner: [
+
+const sentences = {
+
+    
+    
         "I like to play.",
         "The sun is hot.",
         "I love my family.",
